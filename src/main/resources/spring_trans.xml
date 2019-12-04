@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:component-scan base-package="cn.bin.zhang.trans"></context:component-scan>
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>/database.properties</value>
+            </list>
+        </property>
+    </bean>
+    <!-- 进行数据库连接池的配置 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${driver}" />	<!-- 驱动程序 -->
+        <property name="jdbcUrl" value="${url}" /><!-- 连接地址 -->
+        <property name="user" value="${username}" />	<!-- 用户名 -->
+        <property name="password" value="${passwd}" />	<!-- 密码 -->
+        <property name="maxPoolSize" value="${maxPoolSize}" />	<!-- 最大的可用连接数 -->
+        <property name="minPoolSize" value="${minPoolSize}" />	<!-- 最小维持的连接数 -->
+        <property name="initialPoolSize" value="${initialPoolSize}" />	<!-- 初始化连接数 -->
+        <property name="maxIdleTime" value="${maxIdleTime}" />	<!-- 最大等待连接 -->
+    </bean>
+    <!--使用JDBC注解驱动数据库-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!-- 定义数据库的事务控制，本事务控制直接针对于数据库连接操作进行 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--开启事物注解-->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    <beans profile="test">
+        <context:property-placeholder location="classpath:database-test.properties"/>
+    </beans>
+</beans>

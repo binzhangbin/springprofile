@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="liu" class="cn.bin.zhang.ioc.LiuDeHua"></bean>
+    <!--基于构造函数注入-->
+    <bean id="moAttack1" class="cn.bin.zhang.ioc.MoAttack">
+        <constructor-arg ref="liu"></constructor-arg>
+    </bean>
+    <!--基于setter注入-->
+    <!--<bean id="moAttack2" class="cn.bin.zhang.ioc.MoAttack">-->
+        <!--<property name="geLi" ref="liu"></property>-->
+    <!--</bean>-->
+</beans>
