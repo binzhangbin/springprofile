@@ -16,7 +16,7 @@
 	<context:annotation-config />
 	<context:component-scan base-package="cn.bin.zhang" />
 	<!-- 导入所有与数据库连接有关的信息项 -->
-	<!--<context:property-placeholder location="classpath:database.properties" />-->
+	<context:property-placeholder location="classpath:database-dev.properties" />
 	<!-- 进行数据库连接池的配置 -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="${driver}" />	<!-- 驱动程序 -->
@@ -84,19 +84,4 @@
 	<bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
 		<property name="cacheManager" ref="ehcacheManagerFactory" />
 	</bean>
-
-	<!-- 开发环境配置文件 -->
-	<beans profile="development">
-		<context:property-placeholder location="classpath:database-dev.properties"/>
-	</beans>
-	<!-- 生产环境配置文件 -->
-	<!--<beans profile="production">-->
-		<!--<context:property-placeholder location="classpath:database.properties"/>-->
-	<!--</beans>-->
-	<!-- 测试环境配置文件 -->
-	<!--<beans profile="test">-->
-		<!--<context:property-placeholder location="classpath:database-test.properties"/>-->
-	<!--</beans>-->
-
-
 </beans>

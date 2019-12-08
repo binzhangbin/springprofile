@@ -11,7 +11,7 @@ public interface IUserDAO {
         @Select("select uid,uname,uage,ubirthday,upasswd,uphoto,uinfo from user where uname=#{uname} and upasswd=#{upasswd}")
         User findByNameAndPasswd(@Param("uname") String uname, @Param("upasswd") String upasswd)throws Exception;
         @Update("update user set uage=#{uage},uname=#{uname},ubirthday=#{ubirthday},upasswd=#{upasswd},uphoto=#{uphoto},uinfo=#{uinfo} where uid=#{uid}")
-        boolean doUpdate(User user)throws Exception;
+        int doUpdate(User user)throws Exception;
         @Insert("insert into user(uname,uage,ubirthday,upasswd) values(#{uname},#{uage},#{ubirthday},#{upasswd})")
         boolean insertUser(User user)throws Exception;
 }

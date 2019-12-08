@@ -20,7 +20,11 @@
     <param-name>spring.profiles.default</param-name>
     <param-value>development</param-value>
   </context-param>
-  <!-- 此为Spring MVC配置所需要的程序文件，所有的请求都提交给Spring的Servlet程序 -->
+    <context-param>
+      <param-name>spring.profiles.active</param-name>
+      <param-value>development</param-value>
+    </context-param>
+    <!-- 此为Spring MVC配置所需要的程序文件，所有的请求都提交给Spring的Servlet程序 -->
   <servlet>
     <servlet-name>springmvc</servlet-name>
     <!-- 此为Spring MVC自己提供的servlet程序，一定要写上，因为其可以处理用户请求 -->
@@ -28,7 +32,7 @@
     <init-param>
       <param-name>contextConfigLocation</param-name>
       <!-- 配置Spring MVC所需要的配置文件，可以与Spring容器写在一起 -->
-      <param-value>classpath:applicationMVC.xml</param-value>
+      <param-value>classpath:applicationContext_MVC.xml</param-value>
     </init-param>
   </servlet>
   <!-- SpringMVC中所有路径的请求映射，使用的是“*.action” -->

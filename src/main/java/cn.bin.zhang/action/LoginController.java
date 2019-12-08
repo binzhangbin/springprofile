@@ -1,6 +1,7 @@
 package cn.bin.zhang.action;
 
 import cn.bin.zhang.service.IBlogService;
+import cn.bin.zhang.service.ILockService;
 import cn.bin.zhang.service.IUserService;
 import cn.bin.zhang.util.MD5Code;
 import cn.bin.zhang.vo.Blog;
@@ -8,6 +9,7 @@ import cn.bin.zhang.vo.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -27,6 +31,10 @@ public class LoginController {
     private IUserService iUserService;
     @Autowired
     private IBlogService iBlogService;
+    @Autowired
+    private ILockService iLockService;
+    @Autowired
+    private EhCacheCacheManager ehcacheManager;
 
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
@@ -35,30 +43,48 @@ public class LoginController {
     }
 
     @RequestMapping("/login")
-    public ModelAndView login(@RequestParam("uname") String uname, @RequestParam("upasswd") String upasswd) throws Exception {
+    public ModelAndView login(HttpServletRequest request, @RequestParam("uname") String uname, @RequestParam("upasswd") String upasswd) throws Exception {
+        ModelAndView modelAndView = new ModelAndView();
         String successViewName = "index";
         String failViewName = "relogin";
-        ModelAndView modelAndView = new ModelAndView();
-        if (upasswd == null || "".equals(upasswd) || uname == null || "".equals(uname)) {
+        boolean lockflag = false;//锁定用户标志位
+        if (this.ehcacheManager.getCache("userCache").get(request.getRemoteAddr()+"locked") != null) {
             modelAndView.setViewName(failViewName);
-            modelAndView.addObject("relogin", "用户名或密码错误，请重新登录");
+            modelAndView.addObject("lock", "ip【" + request.getRemoteAddr() + "】被锁定，请于3分钟后重新登录");
+            lockflag = true;//锁定用户
         } else {
-            String md5passwd = new MD5Code().getMD5ofStr(upasswd);
-            try {
-                User user = this.iUserService.findByNameAndPasswd(uname, md5passwd);
-                if (user != null) {
-                    modelAndView.setViewName(successViewName);
-                    Blog blog = this.iBlogService.findByUid(user.getUid());
-                    modelAndView.addObject("blog", blog);
-                } else {
-                    modelAndView.setViewName(failViewName);
-                    modelAndView.addObject("relogin", "用户名或密码错误，请重新登录");
+            if (upasswd == null || "".equals(upasswd) || uname == null || "".equals(uname)) {
+                modelAndView.setViewName(failViewName);
+                modelAndView.addObject("relogin", "用户名或密码错误，请重新登录");
+                lockflag = true;//锁定用户
+            } else {
+                String md5passwd = new MD5Code().getMD5ofStr(upasswd);
+                try {
+                    User user = this.iUserService.findByNameAndPasswd(uname, md5passwd);
+                    if (user != null) {
+                        modelAndView.setViewName(successViewName);
+                        Blog blog = this.iBlogService.findByUid(user.getUid());
+                        modelAndView.addObject("blog", blog);
+                        this.ehcacheManager.getCache("userCache").evict(request.getRemoteAddr()+"locked");
+                        String ip = request.getRemoteAddr();
+                        this.iLockService.updateLock(ip, 0);
+                    } else {
+                        modelAndView.setViewName(failViewName);
+                        modelAndView.addObject("relogin", "用户名或密码错误，请重新登录");
+                        lockflag = true;//锁定用户
+                    }
+                    modelAndView.addObject("user", user);
+                } catch (Exception e) {
+                    lockflag = true;
+                    e.printStackTrace();
+                    throw e;//不剖出就不会被AOP截获
                 }
-                modelAndView.addObject("user", user);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw e;//不剖出就不会被AOP截获
             }
+        }
+        if (lockflag) {//更新字段
+            String ip = request.getRemoteAddr();
+            Integer lockCount = this.iLockService.getLock(ip);
+            boolean updateLockFlag = this.iLockService.updateLock(ip, lockCount + 1);
         }
         return modelAndView;
     }
@@ -75,7 +101,7 @@ public class LoginController {
         if (booladd) {
             resLoc = "redirect:/login.html";
         }
-        int c = 1 / 0;
+//        int c = 1 / 0;
         return resLoc;
     }
 }

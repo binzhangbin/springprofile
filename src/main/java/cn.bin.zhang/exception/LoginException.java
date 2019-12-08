@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginException implements HandlerExceptionResolver {
+    @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
                                          Exception ex) {
         Map<String, Object> model = new HashMap<String, Object>();

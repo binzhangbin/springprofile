@@ -24,12 +24,12 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean doUpdate(User user) throws Exception {
-        return this.iUserDAO.doUpdate(user);
+        return this.iUserDAO.doUpdate(user)==1;
     }
 
     @Override
     public boolean addUser(User user) throws Exception {
-        int c = 1 / 0;
+//        int c = 1 / 0;
         if(this.findByName(user.getUname())==null){
             return this.iUserDAO.insertUser(user);
         }
