@@ -1,8 +1,10 @@
 package cn.bin.zhang.action;
 
+import cn.bin.zhang.vo.User;
 import com.bin.zhang.vo.JsonP;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,4 +30,9 @@ public class JsonPController {//vue进行跨域访问
         response.setCharacterEncoding("utf-8");
         return "backFun"+"("+JSONObject.toJSONString(jsonPList)+")";
     }
+//    @RequestMapping(path = "/test1")
+//    public String test(@ModelAttribute("user")User user){
+    //      此时前台可以直接使用user
+//        return "index";
+//    }
 }

@@ -4,6 +4,7 @@
 	   xmlns:context="http://www.springframework.org/schema/context"
 	   xmlns:aop="http://www.springframework.org/schema/aop"
 	   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:cache="http://www.springframework.org/schema/cache"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
 	   	http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context
@@ -11,7 +12,7 @@
 		http://www.springframework.org/schema/aop
 		http://www.springframework.org/schema/aop/spring-aop.xsd
 		http://www.springframework.org/schema/tx
-		http://www.springframework.org/schema/tx/spring-tx-4.3.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+		http://www.springframework.org/schema/tx/spring-tx-4.3.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 	<!-- 开启注解配置扫描包，需要context命名空间 -->
 	<context:annotation-config />
 	<context:component-scan base-package="cn.bin.zhang" />
@@ -97,6 +98,5 @@
 	<!--<beans profile="test">-->
 		<!--<context:property-placeholder location="classpath:database-test.properties"/>-->
 	<!--</beans>-->
-
 
 </beans>

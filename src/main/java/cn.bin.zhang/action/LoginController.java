@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Controller
-@RequestMapping("/blog/")
+@RequestMapping("/blog")
 public class LoginController {
 
     @Autowired
@@ -65,6 +65,9 @@ public class LoginController {
                         modelAndView.setViewName(successViewName);
                         Blog blog = this.iBlogService.findByUid(user.getUid());
                         modelAndView.addObject("blog", blog);
+                        modelAndView.addObject("user",user);
+                        request.getSession().setAttribute("usr",user);
+                        request.getSession().setAttribute("blg",blog);
                         this.ehcacheManager.getCache("userCache").evict(request.getRemoteAddr()+"locked");
                         String ip = request.getRemoteAddr();
                         this.iLockService.updateLock(ip, 0);
@@ -103,6 +106,25 @@ public class LoginController {
         }
 //        int c = 1 / 0;
         return resLoc;
+    }
+    @RequestMapping("/update")
+    public ModelAndView update(HttpServletRequest request,@RequestParam("uid")Integer uid,@RequestParam("uname") String uname, @RequestParam("ubirthday") Date ubirthday, @RequestParam("uage") Integer uage,@RequestParam("uinfo") String uinfo) throws Exception {
+       ModelAndView modelAndView=new ModelAndView();
+        User user1 = new User();
+        user1.setUname(uname);
+        user1.setUid(uid);
+        user1.setUage(uage);
+        user1.setUbirthday(ubirthday);
+        user1.setUinfo(uinfo);
+        this.iUserService.updateUser(user1);
+        User byName = this.iUserService.findByName(uname);
+        Blog blog = this.iBlogService.findByUid(user1.getUid());
+        modelAndView.addObject("user",byName);
+        modelAndView.addObject("blog",blog);
+        request.getSession().setAttribute("usr",byName);
+        request.getSession().setAttribute("blg",blog);
+        modelAndView.setViewName("index");
+        return modelAndView;
     }
 }
 

@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 
-@Component
-@Aspect
+//@Component
+//@Aspect
 public class LoginLog {
     private static Logger LOG = Logger.getLogger(LoginLog.class);
     @Autowired

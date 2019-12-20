@@ -25,6 +25,6 @@
         <!--</environment>-->
     <!--</environments>-->
     <mappers>
-        <mapper resource="BlogMapper.xml"/>
+        <!--<mapper resource="BlogMapper.xml"/>-->
     </mappers>
 </configuration>

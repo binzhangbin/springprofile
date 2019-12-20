@@ -1,5 +1,6 @@
-package cn.bin.zhang.dao;
+package cn.bin.zhang.service;
 
+import cn.bin.zhang.service.ILockService;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -8,14 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+//测试该代码片段的时候请注释掉cn.bin.zhang.aop.LoginLog
+//@Component
+//@Aspect
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/applicationContext_Test.xml"})
-public class Test_ILockDAO {
+public class Test_ILockService {
     private static  String ip="";
     private static int count=0;
 
     @Autowired
-    private ILockDAO iLockDAO;
+    private ILockService ilockService;
 
 
     @BeforeClass
@@ -25,22 +29,22 @@ public class Test_ILockDAO {
     }
 
     @Test
-    public void testInsertLock()throws Exception{
-        int addCount = this.iLockDAO.insertLock(ip, count);
-        Assert.assertEquals(1,addCount);
+    public void testAddLock()throws Exception{
+        boolean addFlag = this.ilockService.addLock(ip, count);
+        Assert.assertEquals(true,addFlag);
     }
 
     @Test
-    public void testSelLock()throws Exception{
-        Integer lock = this.iLockDAO.getLock(ip);
+    public void testgGetLock()throws Exception{
+        Integer lock = this.ilockService.getLock(ip);
         Assert.assertEquals(count,lock.intValue());
     }
 
 
     @Test
-    public void testUpdate()throws Exception{
-        int updateCount = this.iLockDAO.updateLock(ip, count + 1);
-        Assert.assertEquals(1,updateCount);
+    public void testdoUpdate()throws Exception{
+        boolean updateFlag = this.ilockService.updateLock(ip, count + 1);
+        Assert.assertEquals(true,updateFlag);
     }
 
 }

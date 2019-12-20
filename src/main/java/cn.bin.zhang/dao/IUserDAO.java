@@ -10,8 +10,8 @@ public interface IUserDAO {
         User findByName(@Param("uname") String uname)throws Exception;
         @Select("select uid,uname,uage,ubirthday,upasswd,uphoto,uinfo from user where uname=#{uname} and upasswd=#{upasswd}")
         User findByNameAndPasswd(@Param("uname") String uname, @Param("upasswd") String upasswd)throws Exception;
-        @Update("update user set uage=#{uage},uname=#{uname},ubirthday=#{ubirthday},upasswd=#{upasswd},uphoto=#{uphoto},uinfo=#{uinfo} where uid=#{uid}")
+        @Update("update user set uage=#{uage},uname=#{uname},ubirthday=#{ubirthday},uinfo=#{uinfo} where uid=#{uid}")
         int doUpdate(User user)throws Exception;
-        @Insert("insert into user(uname,uage,ubirthday,upasswd) values(#{uname},#{uage},#{ubirthday},#{upasswd})")
+        @Insert({"insert into user(uname,uage,ubirthday,upasswd,uphoto,uinfo) values(#{uname},#{uage},#{ubirthday},#{upasswd},'/static/image/default.jpg','fighting')"})
         boolean insertUser(User user)throws Exception;
 }

@@ -23,7 +23,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public boolean doUpdate(User user) throws Exception {
+    public boolean updateUser(User user) throws Exception {
         return this.iUserDAO.doUpdate(user)==1;
     }
 
